@@ -1,25 +1,42 @@
-#!/bin/bash -x
+#!/bin/bash 
 
-echo "Welcome to flipCoin simulator game"
+declare -A  coin
+declare -A  pertoss
 
-declare -A  singletDictionary
+echo "Welcome to flip coin games"
 
-for (( i=0; i<9; i++ ))
-do
-  toss=$((RANDOM%2))
-  if [ $toss -eq 0 ]
-  then
-       singletDictionary[head]=$((${singletDictionary[head]}+1))
-  else
-       singletDictionary[tail]=$((${singletDictionary[tail]}+1)) 
-  fi
-done
+function flip_coin()
+{
+  for (( i=1; i<=no_of_toss; i++ ))
+  do
+     coinface=""
+     for (( j=1; j<=no_of_coins; j++ ))
+     do
+         toss=$((RANDOM%2))
+         if [ $toss -eq 0 ]
+         then
+              coinface+=head
+         else
+              coinface+=tail
+         fi
+     done
+     echo $coinface
+     coin[$coinface]=$((${coin[$coinface]}+1))
+     per $coinface
+  done
+  echo "${!coin[@]}"
+  echo "${coin[@]}"
+}
 
-echo "${singletDictionary[@]}"
-echo "${!singletDictionary[@]}"
+function per()
+{
+  per=$((${coin[$coinface]}*100/$no_of_toss))
+  pertoss[$coinface]=$per
+  echo "key ${!pertoss[@]}"
+  echo "pecent ${pertoss[@]}"
+}
 
-headper=$((${singletDictionary[head]}*100/i))
-tailper=$((${singletDictionary[tail]}*100/i))
+read -p "enter the no of toss:  " no_of_toss
+read -p "enter the no of coins: " no_of_coins
 
-echo $tailper
-echo $headper
+"$( flip_coin $(($no_of_toss,$no_of_coins)) )"
